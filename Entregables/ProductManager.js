@@ -1,3 +1,79 @@
+class ProductManager {
+    constructor() {
+        this.products = [];
+        this.productId = 1;
+    }
+
+    addProduct(product) {
+        if (!product.title || !product.description || !product.price || !product.code || !product.stock) {
+            console.error("Todos los campos son obligatorios");
+            return;
+        }
+
+        if (this.products.some(p => p.code === product.code)) {
+            console.error(`Ya existe un producto con el código ${product.code}`);
+            return;
+        }
+
+        product.id = this.productId++;
+        this.products.push(product);
+    }
+
+    getProducts() {
+        return this.products;
+    }
+
+    getProductById(id) {
+        const product = this.products.find(p => p.id === id);
+        if (!product) {
+            console.error("No se encontró el producto");
+            return null;
+        }
+        return product;
+    }
+
+    deleteProduct(id) {
+        const index = this.products.findIndex(p => p.id === id);
+        if (index === -1) {
+            console.error("No se encontró el producto");
+            return false;
+        }
+        this.products.splice(index, 1);
+        return true;
+    }
+
+    updateProduct(id, updatedFields) {
+        const product = this.products.find(p => p.id === id);
+        if (!product) {
+            console.error("No se encontró el producto");
+            return false;
+        }
+
+        if (updatedFields.price < 0) {
+            console.error("El precio no puede ser negativo");
+            return false;
+        }
+
+        if (updatedFields.stock < 0) {
+            console.error("El stock no puede ser negativo");
+            return false;
+        }
+
+        if (updatedFields.id !== id) {
+            console.error("No se puede modificar el ID del producto");
+            return false;
+        }
+
+        if (this.products.some(p => p.code === updatedFields.code && p.id !== id)) {
+            console.error("Ya existe un producto con el código especificado");
+            return false;
+        }
+
+        Object.assign(product, updatedFields);
+        return true;
+    }
+}
+
 const productManager = new ProductManager();
 
 productManager.addProduct({
@@ -15,95 +91,6 @@ productManager.addProduct({
     code: "2",
     stock: 50
 });
-
-
-class ProductManager {
-
-   products = []
-
-    constructor(products) {
-        this.products = products;
-        this.ProductId = 1;
-    }
-
-    addProduct(product) {
-        if (!product.title || !product.description || !product.price || !product.code || !product.stock) {
-            console.error("Todos los campos son obligatorios");
-            return;
-        }
-
-        if (this.products.some(p => p.code === product.code)) {
-            console.error(`Ya existe un producto con el código ${product.code}`);
-            return;
-        }
-
-        this.products.push({ ...product, id: this.ProductId++ });
-    }
-
-    getProducts() {
-        return this.products;
-    }
-
-    getProductById(id) {
-        const product = this.products.find(p => p.id === id);
-        if (!product) {
-            console.error("No encontrado");
-        }
-        return product;
-    }
-
-     addProduct = async ({title, price, code, stock}) => {
-        await this.initialize();
-        if (this.products.some((product) => product.code === code)) {
-            throw new Error('El productor no existe.');
-          }
-        const newProduct = new Product({title, price, code, stock, id: this.lastProductId++});
-        this.products.push(newProduct);
-        await this.save()
-    }
-
-    getProductById = async (id) => {
-        await this.initialize();
-        const returnProduct = this.products.find((product) => product.id === id);
-        if(!returnProduct) throw new Error("Producto no encontrado.");
-        return returnProduct;
-    }
-
-    deleteProduct = async (id) => {
-        await this.initialize();
-        const index = this.products.findIndex((product) => product.id === id);
-        if (index === -1) {
-            throw new Error("Producto no encontrado.");
-        }
-        this.products.splice(index, 1);
-        await this.save();
-    }
-
-    updateProduct = async (id, updatedFields) => {
-        await this.initialize();
-        const index = this.products.findIndex((product) => product.id === id);
-        if (index === -1) throw new Error("Product not found");
-
-        const updatedProduct = { ...this.products[index], ...updatedFields };
-        if (updatedProduct.price < 0) throw new Error('Price cannot be negative');
-        if (updatedProduct.stock < 0) throw new Error('Stock cannot be negative');
-        if (updatedProduct.id !== id) throw new Error('Id cannot be updated');        
-
-        const allowedFields = ['title', 'price', 'code', 'stock'];
-        const invalidFields = Object.keys(updatedFields).filter(field => !allowedFields.includes(field));
-        if (invalidFields.length > 0) {
-            throw new Error(`Update invalido: ${invalidFields.join(', ')}`);
-        }
-
-        if (this.products.some((product) => product.code === updatedProduct.code && product.id !== updatedProduct.id )) {
-            throw new Error('error');
-          }
-
-        this.products[index] = updatedProduct;
-        await this.save();
-        return this.products[index];
-    }
-};
 
 const allProducts = productManager.getProducts();
 console.log(allProducts);
