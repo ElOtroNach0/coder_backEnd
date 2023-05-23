@@ -1,6 +1,5 @@
 const express = require('express');
 const  app = express();
-import fs from "fs";
 
 const productManager = require('./src/ProductManager');
 
