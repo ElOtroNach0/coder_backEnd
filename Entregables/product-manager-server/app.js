@@ -2,7 +2,7 @@ import express from 'express';
 import ProductManager from './ProductManager';
 
 const app = express();
-const port = 3000;
+const port = 8080;
 
 const productManager = new ProductManager();
 productManager.loadProducts();
