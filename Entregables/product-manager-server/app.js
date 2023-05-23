@@ -15,7 +15,7 @@ app.get('/products', async (req, res) => {
         res.json(products.slice(0, limit));
       }
     } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'error' });
     }
   });
   
@@ -28,7 +28,7 @@ app.get('/products', async (req, res) => {
       if (product) {
         res.json(product);
       } else {
-        res.status(404).json({ error: 'Product not found' });
+        res.status(404).json({ error: 'Producto no encontrado' });
       }
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
@@ -36,5 +36,5 @@ app.get('/products', async (req, res) => {
   });
   
   app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    console.log(`Server en port: ${port}`);
   });
