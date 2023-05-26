@@ -41,7 +41,9 @@ class ProductManager {
   }
 
   getProducts() {
-    return this.products;
+    fs.readFileSync(path, 'utf8', () => {
+      return this.products;
+    });
   }
 
   getProductById(id) {
@@ -98,3 +100,5 @@ class ProductManager {
 }
 
 module.exports = ProductManager;
+
+export default ProductManager;
