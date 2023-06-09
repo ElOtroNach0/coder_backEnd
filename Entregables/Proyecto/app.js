@@ -1,6 +1,8 @@
 import express from 'express';
 import ProductManager from './product-manager-server/ProductManager.js';
 import handlebars from 'express-handlebars';
+import fs from "fs";
+
 
 const app = express();
 const port = 8080;
@@ -45,9 +47,18 @@ app.engine('hbs', handlebars.engine());
 app.set('views', './src/views');
 app.set('view engine', 'hbs');
 
-app.get('/', (req, res)=>{
-  res.render('index',{name: 'Nacho'});
-})
+app.get('/', (req, res) => {
+  fs.readFile('./file/products.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error al leer el archivo JSON');
+      return;
+    }
+
+    const jsonData = JSON.parse(data);
+    res.render('home', jsonData.Products);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server en port: ${port}`);

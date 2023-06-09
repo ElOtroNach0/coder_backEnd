@@ -1,0 +1,12 @@
+<div class="main__container__products">
+    {{#each Products}}
+    <div>
+        <span>ID: {{products.id}}</span>
+        <h2>{{products.title}}</h2>
+        <p>Descripcion: {{products.description}}</p>
+        <p>Precio: {{products.price}}</p>
+        <p>Codigo: {{products.code}}</p>
+        <p>Cantidad en stock: {{products.stock}}</p>
+    </div>
+    {{/each}}
+</div>
